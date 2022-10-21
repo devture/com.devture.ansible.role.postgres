@@ -19,8 +19,9 @@ This role *implicitly* depends on [`com.devture.ansible.role.systemd_docker_base
 
 - **vacuum support**: you can vacuum the database using the `--tags=run-postgres-vacuum` tag
 
-- **helpful scripts**: you can easily get a `psql` interactive terminal via the `/base_path/bin/cli` and `/base_path/bin/cli-non-interactive` scripts
-
+- **helpful scripts**:
+  - get a `psql` interactive terminal via the `/base_path/bin/cli` and `/base_path/bin/cli-non-interactive` scripts
+  - dump all databases using the `/base_path/bin/dump-all DIRECTORY_PATH` (which will dump to a `latest-dump.sql.gz` file there)
 
 ## Usage
 

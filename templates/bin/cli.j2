@@ -7,7 +7,7 @@ docker run \
 	--user={{ devture_postgres_uid }}:{{ devture_postgres_gid }} \
 	--cap-drop=ALL \
 	--env-file={{ devture_postgres_base_path }}/env-postgres-psql \
-	--network {{ devture_postgres_container_network }} \
+	--network={{ devture_postgres_container_network }} \
 	{{ devture_postgres_container_image_to_use }} \
 	psql -h {{ devture_postgres_connection_hostname }} \
 	"$@"

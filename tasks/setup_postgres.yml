@@ -74,17 +74,15 @@
     - "env-postgres-psql"
     - "env-postgres-server"
 
-- name: Ensure postgres-cli script created
+- name: Ensure Postgres scripts created
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/bin/cli.j2"
-    dest: "{{ devture_postgres_bin_path }}/cli"
+    src: "{{ role_path }}/templates/bin/{{ item }}.j2"
+    dest: "{{ devture_postgres_bin_path }}/{{ item }}"
     mode: 0755
-
-- name: Ensure postgres-cli-non-interactive script created
-  ansible.builtin.template:
-    src: "{{ role_path }}/templates/bin/cli-non-interactive.j2"
-    dest: "{{ devture_postgres_bin_path }}/cli-non-interactive"
-    mode: 0755
+  with_items:
+    - cli
+    - cli-non-interactive
+    - dump-all
 
 - name: Ensure Postgres service installed
   ansible.builtin.template:
