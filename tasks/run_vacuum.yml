@@ -1,0 +1,82 @@
+---
+
+# Pre-checks
+
+
+# Defaults
+
+- name: Set postgres_start_wait_time, if not provided
+  ansible.builtin.set_fact:
+    postgres_start_wait_time: 15
+  when: "postgres_start_wait_time | default('') == ''"
+
+- name: Set postgres_vacuum_wait_time, if not provided
+  ansible.builtin.set_fact:
+    postgres_vacuum_wait_time: "{{ 7 * 86400 }}"
+  when: "postgres_vacuum_wait_time | default('') == ''"
+
+
+# Actual vacuuming work
+
+- name: Ensure Postgres is started
+  ansible.builtin.service:
+    name: "{{ devture_postgres_identifier }}"
+    state: started
+    daemon_reload: true
+
+- name: Wait a bit, so that Postgres can start
+  ansible.builtin.wait_for:
+    timeout: "{{ postgres_start_wait_time }}"
+  delegate_to: 127.0.0.1
+  become: false
+
+- ansible.builtin.import_tasks: tasks/detect_existing_postgres_version.yml
+
+- name: Abort, if no existing Postgres version detected
+  ansible.builtin.fail:
+    msg: "Could not find existing Postgres installation"
+  when: "not devture_postgres_detected_existing | bool"
+
+- name: Generate Postgres database vacuum command
+  ansible.builtin.set_fact:
+    devture_postgres_vacuum_command: >-
+      {{ devture_systemd_docker_base_host_command_docker }} run --rm --name {{ devture_postgres_identifier }}-vacuum
+      --user={{ devture_postgres_uid }}:{{ devture_postgres_gid }}
+      --cap-drop=ALL
+      --network={{ devture_postgres_container_network }}
+      --env-file={{ devture_postgres_base_path }}/env-postgres-psql
+      {{ devture_postgres_container_image_latest }}
+      psql -v ON_ERROR_STOP=1 -h {{ devture_postgres_identifier }} {{ devture_postgres_vacuum_database }} -c 'VACUUM FULL VERBOSE'
+
+- name: Note about Postgres vacuum alternative
+  ansible.builtin.debug:
+    msg: >-
+      Running vacuum with the following Postgres ansible.builtin.command: `{{ devture_postgres_vacuum_command }}`.
+      If this crashes, you can stop all processes which may use the database (`systemctl stop example.service another.service`),
+      start Postgres only (`systemctl start {{ devture_postgres_identifier }}`)
+      and manually run the above command directly on the server.
+
+- name: Ensure services are stopped
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    daemon_reload: true
+  with_items: "{{ devture_postgres_systemd_services_to_stop_for_maintenance_list }}"
+
+- name: Run Postgres vacuum command
+  ansible.builtin.command: "{{ devture_postgres_vacuum_command }}"
+  async: "{{ postgres_vacuum_wait_time }}"
+  poll: 10
+  register: devture_postgres_vacuum_result
+  failed_when: not devture_postgres_vacuum_result.finished
+  changed_when: devture_postgres_vacuum_result.finished and devture_postgres_vacuum_result.rc == 0
+
+# Intentionally show the results
+- ansible.builtin.debug: var="devture_postgres_vacuum_result"
+
+- name: Ensure services are started
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    daemon_reload: true
+  with_items: "{{ devture_postgres_systemd_services_to_stop_for_maintenance_list }}"

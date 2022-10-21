@@ -1,0 +1,27 @@
+---
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/validate_config.yml"
+  tags:
+    - setup-all
+    - setup-postgres
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup_postgres.yml"
+  tags:
+    - setup-all
+    - setup-postgres
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/import_postgres.yml"
+  tags:
+    - import-postgres
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/import_generic_sqlite_db.yml"
+  tags:
+    - import-generic-sqlite-db
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/upgrade_postgres.yml"
+  tags:
+    - upgrade-postgres
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/run_vacuum.yml"
+  tags:
+    - run-postgres-vacuum

@@ -1,0 +1,22 @@
+---
+
+- name: Fail if required Postgres settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`).
+  when: "vars[item] == ''"
+  with_items:
+    - devture_postgres_identifier
+    - devture_postgres_uid
+    - devture_postgres_gid
+    - devture_postgres_container_network
+    - devture_postgres_connection_hostname
+    - devture_postgres_connection_port
+    - devture_postgres_connection_username
+    - devture_postgres_connection_password
+    - devture_postgres_db_name
+
+- name: Fail if Postgres password length exceeded
+  ansible.builtin.fail:
+    msg: "The maximum `devture_postgres_connection_password` length is 99 characters"
+  when: "devture_postgres_connection_password | length > 99"
