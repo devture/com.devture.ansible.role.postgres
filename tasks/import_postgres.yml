@@ -105,5 +105,5 @@
   async: "{{ postgres_import_wait_time }}"
   poll: 10
   register: devture_postgres_import_postgres_command_result
-  failed_when: not devture_postgres_import_postgres_command_result.finished
+  failed_when: not devture_postgres_import_postgres_command_result.finished or devture_postgres_import_postgres_command_result.rc != 0
   changed_when: devture_postgres_import_postgres_command_result.finished and devture_postgres_import_postgres_command_result.rc == 0

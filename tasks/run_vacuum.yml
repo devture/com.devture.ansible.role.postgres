@@ -68,7 +68,7 @@
   async: "{{ postgres_vacuum_wait_time }}"
   poll: 10
   register: devture_postgres_vacuum_result
-  failed_when: not devture_postgres_vacuum_result.finished
+  failed_when: not devture_postgres_vacuum_result.finished or devture_postgres_vacuum_result.rc != 0
   changed_when: devture_postgres_vacuum_result.finished and devture_postgres_vacuum_result.rc == 0
 
 # Intentionally show the results
