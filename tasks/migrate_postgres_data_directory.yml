@@ -76,3 +76,6 @@
   ansible.builtin.service:
     daemon_reload: true
   when: "result_pg_old_data_dir_stat.stat.exists"
+
+# We don't try to restart Postgres here.
+# We've just stopped it, relocated the data and cleaned up a bit, but we haven't configured it anew yet, so we can't start it.

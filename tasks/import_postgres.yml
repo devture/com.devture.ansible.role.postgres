@@ -44,9 +44,9 @@
     name: "{{ devture_postgres_identifier }}"
     state: started
     daemon_reload: true
-  register: devture_postgres_service_start_result
+  register: devture_postgres_ensure_started_result
 
-- when: "devture_postgres_service_start_result.changed | bool"
+- when: "devture_postgres_ensure_started_result.changed | bool"
   name: Wait a bit, so that Postgres can start
   ansible.builtin.wait_for:
     timeout: "{{ postgres_start_wait_time }}"
@@ -107,3 +107,9 @@
   register: devture_postgres_import_postgres_command_result
   failed_when: not devture_postgres_import_postgres_command_result.finished or devture_postgres_import_postgres_command_result.rc != 0
   changed_when: devture_postgres_import_postgres_command_result.finished and devture_postgres_import_postgres_command_result.rc == 0
+
+- when: "devture_postgres_ensure_started_result.changed | bool"
+  name: Ensure Postgres is stopped (if it previously was)
+  ansible.builtin.service:
+    name: "{{ devture_postgres_identifier }}"
+    state: stopped

@@ -62,9 +62,9 @@
     name: "{{ devture_postgres_identifier }}"
     state: started
     daemon_reload: true
-  register: devture_postgres_result_start
+  register: devture_postgres_ensure_started_result
 
-- when: devture_postgres_result_start.changed | bool
+- when: devture_postgres_ensure_started_result.changed | bool
   name: Wait a bit, so that Postgres can start
   ansible.builtin.wait_for:
     timeout: "{{ postgres_start_wait_time }}"
@@ -173,6 +173,12 @@
   ansible.builtin.file:
     path: "{{ postgres_dump_dir }}/{{ postgres_dump_name }}"
     state: absent
+
+- when: "devture_postgres_ensure_started_result.changed | bool"
+  name: Ensure Postgres is stopped (if it previously was)
+  ansible.builtin.service:
+    name: "{{ devture_postgres_identifier }}"
+    state: stopped
 
 - name: Ensure services are started
   ansible.builtin.service:

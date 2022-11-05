@@ -23,8 +23,8 @@
   no_log: true
 
 - when: "devture_postgres_ensure_started_result.changed | bool"
-  name: Ensure Postgres is stopped
+  name: Ensure Postgres is stopped (if it previously was)
   ansible.builtin.service:
     name: "{{ devture_postgres_identifier }}"
     state: stopped
-  
+

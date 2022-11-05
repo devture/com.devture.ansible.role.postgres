@@ -89,14 +89,14 @@
     name: "{{ devture_postgres_identifier }}"
     state: started
     daemon_reload: true
-  register: devture_postgres_service_start_result
+  register: devture_postgres_ensure_started_result
 
 - name: Wait a bit, so that Postgres can start
   ansible.builtin.wait_for:
     timeout: "{{ postgres_start_wait_time }}"
   delegate_to: 127.0.0.1
   become: false
-  when: "devture_postgres_service_start_result.changed | bool"
+  when: "devture_postgres_ensure_started_result.changed | bool"
 
 # We only stop services here, leaving it to the caller to start them later.
 #
@@ -169,3 +169,9 @@
           "NOTE: Your {{ devture_postgres_db_migration_request.engine_old }} database file has been imported into Postgres. The original database file has been moved from `{{ devture_postgres_db_migration_request.src }}` to `{{ devture_postgres_db_migration_request.src }}.backup`. When you've confirmed that the import went well and everything works, you should be able to safely delete this file."
         ]
       }}
+
+- when: "devture_postgres_ensure_started_result.changed | bool"
+  name: Ensure Postgres is stopped (if it previously was)
+  ansible.builtin.service:
+    name: "{{ devture_postgres_identifier }}"
+    state: stopped
