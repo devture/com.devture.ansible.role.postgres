@@ -5,9 +5,9 @@
     name: "{{ devture_postgres_identifier }}"
     state: started
     daemon_reload: true
-  register: devture_postgres_service_start_result
+  register: devture_postgres_ensure_started_result
 
-- when: "devture_postgres_service_start_result.changed | bool"
+- when: "devture_postgres_ensure_started_result.changed | bool"
   name: Wait a bit, so that Postgres can start
   ansible.builtin.wait_for:
     timeout: "{{ devture_postgres_additional_databases_postgres_start_wait_timeout_seconds }}"
@@ -21,3 +21,10 @@
     loop_var: additional_db
   # Suppress logging to avoid dumping the credentials to the shell
   no_log: true
+
+- when: "devture_postgres_ensure_started_result.changed | bool"
+  name: Ensure Postgres is stopped
+  ansible.builtin.service:
+    name: "{{ devture_postgres_identifier }}"
+    state: stopped
+  
