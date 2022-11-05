@@ -22,7 +22,9 @@
   # Suppress logging to avoid dumping the credentials to the shell
   no_log: true
 
-- name: Ensure Postgres is stopped
+- when: "devture_postgres_ensure_started_result.changed | bool"
+  name: Ensure Postgres is stopped
   ansible.builtin.service:
     name: "{{ devture_postgres_identifier }}"
     state: stopped
+  
