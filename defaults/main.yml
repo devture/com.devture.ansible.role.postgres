@@ -1,6 +1,8 @@
 ---
 # Project source code URL: https://github.com/postgres/postgres
 
+devture_postgres_enabled: true
+
 # devture_postgres_identifier controls the identifer of this Postgres instance, which influences:
 # - the default storage path
 # - the names of systemd services

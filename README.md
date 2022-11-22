@@ -35,7 +35,7 @@ Example playbook:
   roles:
     - role: galaxy/com.devture.ansible.role.systemd_docker_base
 
-    - when: my_playbook_postgres_installation_enabled | bool
+    - when: devture_postgres_enabled | bool
       role: galaxy/com.devture.ansible.role.postgres
 
     - role: another_role
@@ -44,8 +44,6 @@ Example playbook:
 Example playbook configuration (`group_vars/servers` or other):
 
 ```yaml
-my_playbook_postgres_installation_enabled: true
-
 devture_postgres_identifier: my-postgres
 
 devture_postgres_base_path: "{{ my_base_path }}/postgres"

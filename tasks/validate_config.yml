@@ -15,6 +15,7 @@
     - devture_postgres_connection_username
     - devture_postgres_connection_password
     - devture_postgres_db_name
+    - devture_postgres_architecture
 
 - name: Fail if Postgres password length exceeded
   ansible.builtin.fail:
