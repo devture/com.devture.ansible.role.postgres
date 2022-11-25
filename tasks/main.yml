@@ -13,6 +13,13 @@
     - install-postgres
 
 - block:
+    - when: not devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_uninstall.yml"
+  tags:
+    - setup-all
+    - setup-postgres
+
+- block:
     - when: devture_postgres_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/import_postgres.yml"
   tags:
