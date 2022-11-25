@@ -1,27 +1,37 @@
 ---
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/validate_config.yml"
+- block:
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
+
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_install.yml"
   tags:
     - setup-all
     - setup-postgres
+    - install-all
+    - install-postgres
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup_postgres.yml"
-  tags:
-    - setup-all
-    - setup-postgres
-
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/import_postgres.yml"
+- block:
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/import_postgres.yml"
   tags:
     - import-postgres
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/import_generic_sqlite_db.yml"
+- block:
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/import_generic_sqlite_db.yml"
   tags:
     - import-generic-sqlite-db
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/upgrade_postgres.yml"
+- block:
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/upgrade_postgres.yml"
   tags:
     - upgrade-postgres
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/run_vacuum.yml"
+- block:
+    - when: devture_postgres_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/run_vacuum.yml"
   tags:
     - run-postgres-vacuum

@@ -35,8 +35,7 @@ Example playbook:
   roles:
     - role: galaxy/com.devture.ansible.role.systemd_docker_base
 
-    - when: devture_postgres_enabled | bool
-      role: galaxy/com.devture.ansible.role.postgres
+    - role: galaxy/com.devture.ansible.role.postgres
 
     - role: another_role
 ```
