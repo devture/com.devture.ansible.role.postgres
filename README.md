@@ -52,7 +52,7 @@ devture_postgres_container_network: "{{ my_container_container_network }}"
 devture_postgres_uid: "{{ my_uid }}"
 devture_postgres_gid: "{{ my_gid }}"
 
-devture_postgres_vacuum_database: "mydb"
+devture_postgres_vacuum_default_databases_list: ["mydb", "anotherdb"]
 
 devture_postgres_systemd_services_to_stop_for_maintenance_list: |
   {{
