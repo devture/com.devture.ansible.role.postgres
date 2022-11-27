@@ -132,7 +132,7 @@
 - when: "devture_postgres_db_migration_request.additional_psql_statements_list | default([]) | length > 0"
   block:
     - ansible.builtin.import_role:
-        name: com.devture.ansible.role.postgres
+        name: "{{ ansible_role_name }}"
         tasks_from: detect_existing_postgres_version
 
     - ansible.builtin.set_fact:
