@@ -4,7 +4,7 @@
 # If there is, it also tries to detect the container image that corresponds to that version.
 #
 # This utility is intentionally not in `tasks/util`, because if it were, it wouldn't be possible
-# to include it in other roles via the import_role module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/import_role_module.html
+# to include it in other roles via the include_role module: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/include_role_module.html
 
 - name: Initialize Postgres version determination variables (default to empty)
   ansible.builtin.set_fact:
