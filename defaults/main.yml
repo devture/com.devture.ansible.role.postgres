@@ -36,7 +36,14 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list: []
 
 # devture_postgres_vacuum_default_databases_list specifies a list of databases to vacuum when running `--tags=run-postgres-vacuum`,
 # unless a `postgres_vacuum_databases_list` extra argument is provided
-devture_postgres_vacuum_default_databases_list: "{{ [devture_postgres_db_name] }}"
+devture_postgres_vacuum_default_databases_list: |
+  {{
+    (
+        ([devture_postgres_db_name])
+        +
+        (devture_postgres_additional_databases | map(attribute='name'))
+    ) | unique
+  }}
 
 devture_postgres_architecture: amd64
 
