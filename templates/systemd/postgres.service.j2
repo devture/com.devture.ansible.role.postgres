@@ -26,7 +26,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--read-only \
 			--tmpfs=/tmp:rw,noexec,nosuid,size=100m \
 			--tmpfs=/run/postgresql:rw,noexec,nosuid,size=100m \
-			--shm-size=256m \
+			--shm-size={{ devture_postgres_container_shm_size }} \
 			--network={{ devture_postgres_container_network }} \
 			{% if devture_postgres_container_postgres_bind_port %}
 			-p {{ devture_postgres_container_postgres_bind_port }}:5432 \

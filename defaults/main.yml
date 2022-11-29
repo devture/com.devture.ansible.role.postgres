@@ -86,6 +86,8 @@ devture_postgres_process_extra_arguments: []
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:5432"), or empty string to not expose.
 devture_postgres_container_postgres_bind_port: ""
 
+devture_postgres_container_shm_size: "256m"
+
 devture_postgres_systemd_required_services_list: ['docker.service']
 
 # A list of additional (databases and their credentials) to create.
@@ -140,7 +142,7 @@ devture_postgres_import_databases_to_ignore: |
   }}
 
 # We also allow for the database name to be quoted, which is rare, but might happen for database names which are special keywords (e.g. `default`).
-devture_postgres_import_databases_ignore_regex: "^CREATE DATABASE \\\"?({{ devture_postgres_import_databases_to_ignore | join('|') }})\\\"?\\s"  # noqa jinja[spacing]
+devture_postgres_import_databases_ignore_regex: "^CREATE DATABASE \\\"?({{ devture_postgres_import_databases_to_ignore | join('|') }})\\\"?\\s" # noqa jinja[spacing]
 
 # The number of seconds to wait after starting Postgres systemd service
 # and before trying to run queries for creating additional databases/users against it.
@@ -150,7 +152,6 @@ devture_postgres_import_databases_ignore_regex: "^CREATE DATABASE \\\"?({{ devtu
 # On ARM, we wait some more. ARM32 devices are especially known for being slow.
 # ARM64 likely don't need such a long delay, but it doesn't hurt too much having it.
 devture_postgres_additional_databases_postgres_start_wait_timeout_seconds: "{{ 45 if devture_postgres_architecture in ['arm32', 'arm64'] else 15 }}"
-
 
 devture_postgres_pgloader_container_image_self_build: "{{ devture_postgres_architecture != 'amd64' }}"
 devture_postgres_pgloader_container_image_self_build_repo: "https://github.com/illagrenan/pgloader-docker.git"
