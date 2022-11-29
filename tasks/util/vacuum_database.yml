@@ -16,13 +16,15 @@
 - name: Note about Postgres vacuum alternative
   ansible.builtin.debug:
     msg: >-
-      Running vacuum against the `{{ devture_postgres_database_to_vacuum }}` database with the following Postgres command: `{{ devture_postgres_vacuum_command }}`.
+      Running vacuum against the `{{ devture_postgres_database_to_vacuum }}` database with the following Postgres command:
+      `{{ devture_postgres_vacuum_command }}`.
       If this crashes, you can stop all processes which may use the database (`systemctl stop example.service another.service`),
       start Postgres only (`systemctl start {{ devture_postgres_identifier }}`)
       and manually run the above command directly on the server.
 
 - name: Run Postgres vacuum command
-  ansible.builtin.command: "{{ devture_postgres_vacuum_command }}"
+  ansible.builtin.command:
+    cmd: "{{ devture_postgres_vacuum_command }}"
   async: "{{ postgres_vacuum_wait_time }}"
   poll: 10
   register: devture_postgres_vacuum_result
@@ -30,4 +32,5 @@
   changed_when: devture_postgres_vacuum_result.finished and devture_postgres_vacuum_result.rc == 0
 
 # Intentionally show the results
-- ansible.builtin.debug: var="devture_postgres_vacuum_result"
+- ansible.builtin.debug:
+    var: "devture_postgres_vacuum_result"

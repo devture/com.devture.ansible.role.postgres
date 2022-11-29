@@ -56,7 +56,7 @@
           replace: 'FROM debian:bullseye-slim'
 
     - name: Ensure pgloader container image is built
-      docker_image:
+      community.docker.docker_image:
         name: "{{ devture_postgres_pgloader_docker_image }}"
         source: build
         force_source: "{{ devture_postgres_pgloader_git_pull_results.changed if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
@@ -67,7 +67,7 @@
           pull: true
 
 - name: Ensure pgloader container image is pulled
-  docker_image:
+  community.docker.docker_image:
     name: "{{ devture_postgres_pgloader_docker_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
     force_source: "{{ devture_postgres_pgloader_container_image_force_pull if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"

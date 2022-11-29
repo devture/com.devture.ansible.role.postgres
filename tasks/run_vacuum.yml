@@ -29,14 +29,15 @@
     daemon_reload: true
   register: devture_postgres_ensure_started_result
 
-- when: devture_postgres_ensure_started_result.changed | bool
-  name: Wait a bit, so that Postgres can start
+- name: Wait a bit, so that Postgres can start
+  when: devture_postgres_ensure_started_result.changed | bool
   ansible.builtin.wait_for:
     timeout: "{{ postgres_start_wait_time }}"
   delegate_to: 127.0.0.1
   become: false
 
-- ansible.builtin.import_tasks: tasks/detect_existing_postgres_version.yml
+- name: Detect existing Postgres version
+  ansible.builtin.import_tasks: tasks/detect_existing_postgres_version.yml
 
 - name: Abort, if no existing Postgres version detected
   ansible.builtin.fail:
@@ -56,8 +57,8 @@
   loop_control:
     loop_var: devture_postgres_database_to_vacuum
 
-- when: "devture_postgres_ensure_started_result.changed | bool"
-  name: Ensure Postgres is stopped (if it previously was)
+- name: Ensure Postgres is stopped (if it previously was)
+  when: devture_postgres_ensure_started_result.changed | bool
   ansible.builtin.service:
     name: "{{ devture_postgres_identifier }}"
     state: stopped

@@ -7,8 +7,8 @@
     daemon_reload: true
   register: devture_postgres_ensure_started_result
 
-- when: "devture_postgres_ensure_started_result.changed | bool"
-  name: Wait a bit, so that Postgres can start
+- name: Wait a bit, so that Postgres can start
+  when: devture_postgres_ensure_started_result.changed | bool
   ansible.builtin.wait_for:
     timeout: "{{ devture_postgres_additional_databases_postgres_start_wait_timeout_seconds }}"
   delegate_to: 127.0.0.1
@@ -22,9 +22,8 @@
   # Suppress logging to avoid dumping the credentials to the shell
   no_log: true
 
-- when: "devture_postgres_ensure_started_result.changed | bool"
-  name: Ensure Postgres is stopped (if it previously was)
+- name: Ensure Postgres is stopped (if it previously was)
+  when: devture_postgres_ensure_started_result.changed | bool
   ansible.builtin.service:
     name: "{{ devture_postgres_identifier }}"
     state: stopped
-
