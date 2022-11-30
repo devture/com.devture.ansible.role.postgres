@@ -30,3 +30,4 @@
   when: "item.old in vars"
   with_items:
     - {'old': 'devture_postgres_vacuum_database', 'new': '<superseded by devture_postgres_vacuum_default_databases_list>'}
+    - {'old': 'devture_postgres_additional_databases', 'new': 'devture_postgres_managed_databases'}

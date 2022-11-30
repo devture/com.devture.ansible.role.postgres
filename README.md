@@ -10,7 +10,7 @@ This role *implicitly* depends on:
 
 ## Features
 
-- **multiple databases support**: this role manages one main database and root credentials, and optionally a list of additional databases with their own credentials (see `devture_postgres_additional_databases`)
+- **multiple databases support**: this role manages one main database and root credentials, and optionally a list of additional managed databases with their own credentials (see `devture_postgres_managed_databases`)
 
 - **backward compatible**: even if a new Postgres version is available, the role will keep you on the Postgres version you had started with until you perform a major upgrade manually (see below)
 
@@ -59,7 +59,7 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list: |
     (['my-service.service'])
   }}
 
-devture_postgres_additional_databases: |
+devture_postgres_managed_databases: |
   {{
     [{
       'name': my_database_name,

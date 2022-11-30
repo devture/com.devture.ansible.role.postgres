@@ -41,7 +41,7 @@ devture_postgres_vacuum_default_databases_list: |
     (
         ([devture_postgres_db_name])
         +
-        (devture_postgres_additional_databases | map(attribute='name'))
+        (devture_postgres_managed_databases | map(attribute='name'))
     ) | unique
   }}
 
@@ -90,20 +90,20 @@ devture_postgres_container_shm_size: "256m"
 
 devture_postgres_systemd_required_services_list: ['docker.service']
 
-# A list of additional (databases and their credentials) to create.
+# A list of databases (and their credentials) that this role will create and manage on the server.
 #
 # Example:
-# devture_postgres_additional_databases:
+# devture_postgres_managed_databases:
 #   - name: some_database
 #     username: some_username
 #     password: some_password
 #   - name: another_database
 #     username: another_username
 #     password: another_password
-devture_postgres_additional_databases: []
+devture_postgres_managed_databases: []
 
 # A list of roles/users to avoid creating when importing (or upgrading) the database.
-# If a dump file contains the roles and they've also been created beforehand (see `devture_postgres_additional_databases`),
+# If a dump file contains the roles and they've also been created beforehand (see `devture_postgres_managed_databases`),
 # importing would fail.
 # We either need to not create them or to ignore the `CREATE ROLE` statements in the dump.
 devture_postgres_import_roles_to_ignore: |
@@ -111,7 +111,7 @@ devture_postgres_import_roles_to_ignore: |
     (
       [devture_postgres_connection_username]
       +
-      devture_postgres_additional_databases | map(attribute='username') | list
+      devture_postgres_managed_databases | map(attribute='username') | list
     ) | unique
   }}
 
@@ -129,7 +129,7 @@ devture_postgres_import_roles_to_ignore: |
 devture_postgres_import_roles_ignore_regex: "^(CREATE|ALTER) ROLE \\\"?({{ devture_postgres_import_roles_to_ignore | join('|') }})\\\"?(;| WITH)"  # noqa jinja[spacing]
 
 # A list of databases to avoid creating when importing (or upgrading) the database.
-# If a dump file contains the databases and they've also been created beforehand (see `devture_postgres_additional_databases`),
+# If a dump file contains the databases and they've also been created beforehand (see `devture_postgres_managed_databases`),
 # importing would fail.
 # We either need to not create them or to ignore the `CREATE DATABASE` statements in the dump.
 devture_postgres_import_databases_to_ignore: |
@@ -137,7 +137,7 @@ devture_postgres_import_databases_to_ignore: |
     (
       [devture_postgres_db_name]
       +
-      devture_postgres_additional_databases | map(attribute='name') | list
+      devture_postgres_managed_databases | map(attribute='name') | list
     ) | unique
   }}
 
@@ -145,13 +145,13 @@ devture_postgres_import_databases_to_ignore: |
 devture_postgres_import_databases_ignore_regex: "^CREATE DATABASE \\\"?({{ devture_postgres_import_databases_to_ignore | join('|') }})\\\"?\\s" # noqa jinja[spacing]
 
 # The number of seconds to wait after starting Postgres systemd service
-# and before trying to run queries for creating additional databases/users against it.
+# and before trying to run queries for initializing managed databases/users against it.
 #
 # For most (subsequent) runs, Postgres would already be running, so no waiting will be happening at all.
 #
 # On ARM, we wait some more. ARM32 devices are especially known for being slow.
 # ARM64 likely don't need such a long delay, but it doesn't hurt too much having it.
-devture_postgres_additional_databases_postgres_start_wait_timeout_seconds: "{{ 45 if devture_postgres_architecture in ['arm32', 'arm64'] else 15 }}"
+devture_postgres_managed_databases_postgres_start_wait_timeout_seconds: "{{ 45 if devture_postgres_architecture in ['arm32', 'arm64'] else 15 }}"
 
 devture_postgres_pgloader_container_image_self_build: "{{ devture_postgres_architecture != 'amd64' }}"
 devture_postgres_pgloader_container_image_self_build_repo: "https://github.com/illagrenan/pgloader-docker.git"
