@@ -92,15 +92,25 @@ devture_postgres_systemd_required_services_list: ['docker.service']
 
 # A list of databases (and their credentials) that this role will create and manage on the server.
 #
-# Example:
-# devture_postgres_managed_databases:
+# `devture_postgres_managed_databases_auto` is managed by the playbook.
+# Your own definitions should go into `devture_postgres_managed_databases_additional`
+# See `devture_postgres_managed_databases_additional` for the correct syntax.
+devture_postgres_managed_databases: "{{ devture_postgres_managed_databases_auto + devture_postgres_managed_databases_additional }}"
+
+# Additional/managed database definitions managed by the playbook.
+# To add your own, use `devture_postgres_managed_databases_additional`
+devture_postgres_managed_databases_auto: []
+
+# Your own additional/managed database definitions.
+#
+# devture_postgres_managed_databases_additional:
 #   - name: some_database
 #     username: some_username
 #     password: some_password
 #   - name: another_database
 #     username: another_username
 #     password: another_password
-devture_postgres_managed_databases: []
+devture_postgres_managed_databases_additional: []
 
 # A list of roles/users to avoid creating when importing (or upgrading) the database.
 # If a dump file contains the roles and they've also been created beforehand (see `devture_postgres_managed_databases`),
