@@ -58,12 +58,12 @@ docker_postgres_container_image_registry_prefix: "docker.io/"
 devture_postgres_container_image_suffix: "{{ '-alpine' if devture_postgres_architecture in ['amd64', 'arm64'] else '' }}"
 
 devture_postgres_container_image_v9: "{{ docker_postgres_container_image_registry_prefix }}postgres:9.6.24{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v10: "{{ docker_postgres_container_image_registry_prefix }}postgres:10.22{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v11: "{{ docker_postgres_container_image_registry_prefix }}postgres:11.17{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v12: "{{ docker_postgres_container_image_registry_prefix }}postgres:12.12{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v13: "{{ docker_postgres_container_image_registry_prefix }}postgres:13.8{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v14: "{{ docker_postgres_container_image_registry_prefix }}postgres:14.5{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v15: "{{ docker_postgres_container_image_registry_prefix }}postgres:15.0{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v10: "{{ docker_postgres_container_image_registry_prefix }}postgres:10.23{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v11: "{{ docker_postgres_container_image_registry_prefix }}postgres:11.18{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v12: "{{ docker_postgres_container_image_registry_prefix }}postgres:12.13{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v13: "{{ docker_postgres_container_image_registry_prefix }}postgres:13.9{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v14: "{{ docker_postgres_container_image_registry_prefix }}postgres:14.6{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v15: "{{ docker_postgres_container_image_registry_prefix }}postgres:15.1{{ devture_postgres_container_image_suffix }}"
 devture_postgres_container_image_latest: "{{ devture_postgres_container_image_v15 }}"
 
 # This variable is assigned at runtime. Overriding its value has no effect.
