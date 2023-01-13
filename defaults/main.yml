@@ -47,7 +47,7 @@ devture_postgres_vacuum_default_databases_list: |
 
 devture_postgres_architecture: amd64
 
-devture_postgres_container_network: ~
+devture_postgres_container_network: "{{ devture_postgres_identifier }}"
 
 docker_postgres_container_image_registry_prefix: "docker.io/"
 

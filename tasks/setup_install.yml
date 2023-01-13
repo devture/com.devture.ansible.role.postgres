@@ -84,6 +84,11 @@
     - cli-non-interactive
     - dump-all
 
+- name: Ensure Postgres container network is created
+  community.general.docker_network:
+    name: "{{ devture_postgres_container_network }}"
+    driver: bridge
+
 - name: Ensure Postgres systemd service installed
   ansible.builtin.template:
     src: "{{ role_path }}/templates/systemd/postgres.service.j2"
