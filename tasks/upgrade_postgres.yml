@@ -113,7 +113,7 @@
     msg: "NOTE: Your Postgres data directory has been moved from `{{ devture_postgres_data_path }}` to `{{ postgres_auto_upgrade_backup_data_path }}`. In the event of failure, you can move it back and run the playbook with --tags=setup-postgres to restore operation."
 
 - name: Install Postgres
-  ansible.builtin.import_tasks: tasks/setup_install.yml
+  ansible.builtin.import_tasks: tasks/install.yml
 
 - name: Ensure Postgres autoruns and is restarted
   ansible.builtin.service:
