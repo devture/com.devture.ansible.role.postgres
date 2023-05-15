@@ -59,11 +59,11 @@ devture_postgres_container_image_suffix: "{{ '-alpine' if devture_postgres_archi
 
 devture_postgres_container_image_v9: "{{ docker_postgres_container_image_registry_prefix }}postgres:9.6.24{{ devture_postgres_container_image_suffix }}"
 devture_postgres_container_image_v10: "{{ docker_postgres_container_image_registry_prefix }}postgres:10.23{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v11: "{{ docker_postgres_container_image_registry_prefix }}postgres:11.19{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v12: "{{ docker_postgres_container_image_registry_prefix }}postgres:12.14{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v13: "{{ docker_postgres_container_image_registry_prefix }}postgres:13.10{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v14: "{{ docker_postgres_container_image_registry_prefix }}postgres:14.7{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_v15: "{{ docker_postgres_container_image_registry_prefix }}postgres:15.2{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v11: "{{ docker_postgres_container_image_registry_prefix }}postgres:11.20{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v12: "{{ docker_postgres_container_image_registry_prefix }}postgres:12.15{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v13: "{{ docker_postgres_container_image_registry_prefix }}postgres:13.11{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v14: "{{ docker_postgres_container_image_registry_prefix }}postgres:14.8{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_v15: "{{ docker_postgres_container_image_registry_prefix }}postgres:15.3{{ devture_postgres_container_image_suffix }}"
 devture_postgres_container_image_latest: "{{ devture_postgres_container_image_v15 }}"
 
 # This variable is assigned at runtime. Overriding its value has no effect.
