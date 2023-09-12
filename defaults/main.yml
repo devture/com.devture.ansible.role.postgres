@@ -34,6 +34,8 @@ devture_postgres_initdb_args: '--lc-collate {{ devture_postgres_default_lc_colla
 # These services will be restarted after the operation completes.
 devture_postgres_systemd_services_to_stop_for_maintenance_list: []
 
+devture_postgres_vacuum_command: "VACUUM FULL VERBOSE ANALYZE"
+
 # devture_postgres_vacuum_default_databases_list specifies a list of databases to vacuum when running `--tags=run-postgres-vacuum`,
 # unless a `postgres_vacuum_databases_list` extra argument is provided
 devture_postgres_vacuum_default_databases_list: |
