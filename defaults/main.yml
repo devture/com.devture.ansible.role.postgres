@@ -68,7 +68,8 @@ devture_postgres_container_image_v12: "{{ docker_postgres_container_image_regist
 devture_postgres_container_image_v13: "{{ docker_postgres_container_image_registry_prefix }}postgres:13.12{{ devture_postgres_container_image_suffix }}"
 devture_postgres_container_image_v14: "{{ docker_postgres_container_image_registry_prefix }}postgres:14.9{{ devture_postgres_container_image_suffix }}"
 devture_postgres_container_image_v15: "{{ docker_postgres_container_image_registry_prefix }}postgres:15.4{{ devture_postgres_container_image_suffix }}"
-devture_postgres_container_image_latest: "{{ devture_postgres_container_image_v15 }}"
+devture_postgres_container_image_v16: "{{ docker_postgres_container_image_registry_prefix }}postgres:16.0{{ devture_postgres_container_image_suffix }}"
+devture_postgres_container_image_latest: "{{ devture_postgres_container_image_v16 }}"
 
 # This variable is assigned at runtime. Overriding its value has no effect.
 devture_postgres_container_image_to_use: '{{ devture_postgres_container_image_latest }}'

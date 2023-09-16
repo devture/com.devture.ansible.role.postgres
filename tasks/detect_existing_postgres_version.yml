@@ -72,3 +72,8 @@
   ansible.builtin.set_fact:
     devture_postgres_detected_version_corresponding_docker_image: "{{ devture_postgres_container_image_v15 }}"
   when: "devture_postgres_detected_version == '15' or devture_postgres_detected_version.startswith('15.')"
+
+- name: Determine corresponding container image to detected version (use 16.x, if detected)
+  ansible.builtin.set_fact:
+    devture_postgres_detected_version_corresponding_docker_image: "{{ devture_postgres_container_image_v16 }}"
+  when: "devture_postgres_detected_version == '15' or devture_postgres_detected_version.startswith('16.')"
