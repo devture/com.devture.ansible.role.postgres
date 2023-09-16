@@ -32,7 +32,11 @@ devture_postgres_initdb_args: '--lc-collate {{ devture_postgres_default_lc_colla
 
 # devture_postgres_systemd_services_to_stop_for_maintenance_list specifies the list of systemd services to stop before vacuuming or upgrading.
 # These services will be restarted after the operation completes.
-devture_postgres_systemd_services_to_stop_for_maintenance_list: []
+devture_postgres_systemd_services_to_stop_for_maintenance_list: "{{ devture_postgres_systemd_services_to_stop_for_maintenance_list_auto + devture_postgres_systemd_services_to_stop_for_maintenance_list_custom }}"
+# devture_postgres_systemd_services_to_stop_for_maintenance_list_auto is for use by the playbook that wraps this role.
+# For your own custom definitions, see devture_postgres_systemd_services_to_stop_for_maintenance_list_custom.
+devture_postgres_systemd_services_to_stop_for_maintenance_list_auto: []
+devture_postgres_systemd_services_to_stop_for_maintenance_list_custom: []
 
 # devture_postgres_vacuum_command specifies the default command to run on `--tags=run-postgres-vacuum`
 # See: https://www.postgresql.org/docs/current/sql-vacuum.html
