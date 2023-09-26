@@ -20,6 +20,26 @@
     postgres_vacuum_databases_list: "{{ devture_postgres_vacuum_default_databases_list }}"
   when: "postgres_vacuum_databases_list | default([]) | length == 0"
 
+- name: Set postgres_vacuum_preset, if not provided
+  ansible.builtin.set_fact:
+    postgres_vacuum_preset: vacuum-complete
+  when: "postgres_vacuum_preset | default('') == ''"
+
+- name: Exit if postgres_vacuum_preset is unrecognized
+  ansible.builtin.fail:
+    msg: "Urecognized preset: {{ postgres_vacuum_preset }}"
+  when: "postgres_vacuum_preset not in devture_postgres_vacuum_presets.keys()"
+
+- name: Set postgres_vacuum_stops_services, if not provided
+  ansible.builtin.set_fact:
+    postgres_vacuum_stops_services: "{{ devture_postgres_vacuum_presets[postgres_vacuum_preset].stopsServices }}"
+  when: "postgres_vacuum_stops_services | default('') == ''"
+
+- name: Set postgres_vacuum_query, if not provided
+  ansible.builtin.set_fact:
+    postgres_vacuum_query: "{{ devture_postgres_vacuum_presets[postgres_vacuum_preset].query }}"
+  when: "postgres_vacuum_query | default('') == ''"
+
 # Actual vacuuming work
 
 - name: Ensure Postgres is started
@@ -44,7 +64,8 @@
     msg: "Could not find existing Postgres installation"
   when: "not devture_postgres_detected_existing | bool"
 
-- name: Ensure services are stopped before Postgres vacuuming
+- name: Ensure services are stopped before Postgres vacuuming, if necessary
+  when: postgres_vacuum_stops_services | bool
   ansible.builtin.service:
     name: "{{ item }}"
     state: stopped
@@ -63,7 +84,8 @@
     name: "{{ devture_postgres_identifier }}"
     state: stopped
 
-- name: Ensure services are started back up after Postgres vacuuming
+- name: Ensure services are started back up after Postgres vacuuming, if necessary
+  when: postgres_vacuum_stops_services | bool
   ansible.builtin.service:
     name: "{{ item }}"
     state: started

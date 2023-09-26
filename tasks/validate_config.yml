@@ -31,3 +31,4 @@
   with_items:
     - {'old': 'devture_postgres_vacuum_database', 'new': '<superseded by devture_postgres_vacuum_default_databases_list>'}
     - {'old': 'devture_postgres_additional_databases', 'new': 'devture_postgres_managed_databases'}
+    - {'old': 'devture_postgres_vacuum_command', 'new': '<superseded by devture_postgres_vacuum_presets and postgres_vacuum_preset, or postgres_vacuum_query>'}

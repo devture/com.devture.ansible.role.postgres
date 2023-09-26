@@ -30,7 +30,7 @@ devture_postgres_default_encoding: UTF8
 # devture_postgres_initdb_args controls POSTGRES_INITDB_ARGS
 devture_postgres_initdb_args: '--lc-collate {{ devture_postgres_default_lc_collate }} --lc-ctype {{ devture_postgres_default_lc_type }} --encoding {{ devture_postgres_default_encoding }}'
 
-# devture_postgres_systemd_services_to_stop_for_maintenance_list specifies the list of systemd services to stop before vacuuming or upgrading.
+# devture_postgres_systemd_services_to_stop_for_maintenance_list specifies the list of systemd services to stop before upgrading or vacuuming (for certain vacuum operations).
 # These services will be restarted after the operation completes.
 devture_postgres_systemd_services_to_stop_for_maintenance_list: "{{ devture_postgres_systemd_services_to_stop_for_maintenance_list_auto + devture_postgres_systemd_services_to_stop_for_maintenance_list_custom }}"
 # devture_postgres_systemd_services_to_stop_for_maintenance_list_auto is for use by the playbook that wraps this role.
@@ -38,9 +38,24 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list: "{{ devture_post
 devture_postgres_systemd_services_to_stop_for_maintenance_list_auto: []
 devture_postgres_systemd_services_to_stop_for_maintenance_list_custom: []
 
-# devture_postgres_vacuum_command specifies the default command to run on `--tags=run-postgres-vacuum`
+# devture_postgres_vacuum_presets contains various presets related to vacuuming (`--tags=run-postgres-vacuum`).
 # See: https://www.postgresql.org/docs/current/sql-vacuum.html
-devture_postgres_vacuum_command: "VACUUM FULL VERBOSE ANALYZE"
+#
+# `stopServices` specifies whether services (see `devture_postgres_systemd_services_to_stop_for_maintenance_list`)
+# need to be stopped before a vacuuming query runs.
+devture_postgres_vacuum_presets:
+  vacuum-complete:
+    query: "VACUUM FULL VERBOSE ANALYZE"
+    stopsServices: true
+  vacuum-full:
+    query: "VACUUM FULL VERBOSE"
+    stopsServices: true
+  vacuum:
+    query: "VACUUM VERBOSE"
+    stopsServices: false
+  analyze:
+    query: "VACUUM ANALYZE"
+    stopsServices: false
 
 # devture_postgres_vacuum_default_databases_list specifies a list of databases to vacuum when running `--tags=run-postgres-vacuum`,
 # unless a `postgres_vacuum_databases_list` extra argument is provided

@@ -11,7 +11,7 @@
       --network={{ devture_postgres_container_network }}
       --env-file={{ devture_postgres_base_path }}/env-postgres-psql
       {{ devture_postgres_detected_version_corresponding_docker_image }}
-      psql -v ON_ERROR_STOP=1 -h {{ devture_postgres_identifier }} {{ devture_postgres_database_to_vacuum }} -c '{{ devture_postgres_vacuum_command }}'
+      psql -v ON_ERROR_STOP=1 -h {{ devture_postgres_identifier }} {{ devture_postgres_database_to_vacuum }} -c '{{ postgres_vacuum_query }}'
 
 - name: Note about Postgres vacuum alternative
   ansible.builtin.debug:
