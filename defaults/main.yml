@@ -45,7 +45,7 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list_custom: []
 # need to be stopped before a vacuuming query runs.
 devture_postgres_vacuum_presets:
   vacuum-complete:
-    query: "VACUUM FULL ANALYZE VERBOSE"
+    query: "VACUUM FULL VERBOSE ANALYZE"
     stopsServices: true
   vacuum-full:
     query: "VACUUM FULL VERBOSE"
@@ -53,8 +53,11 @@ devture_postgres_vacuum_presets:
   vacuum:
     query: "VACUUM VERBOSE"
     stopsServices: false
+  vacuum-analyze:
+    query: "VACUUM VERBOSE ANALYZE"
+    stopsServices: false
   analyze:
-    query: "VACUUM ANALYZE VERBOSE"
+    query: "ANALYZE VERBOSE"
     stopsServices: false
 
 # devture_postgres_vacuum_default_databases_list specifies a list of databases to vacuum when running `--tags=run-postgres-vacuum`,
