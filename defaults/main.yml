@@ -27,6 +27,29 @@ devture_postgres_default_lc_collate: C
 devture_postgres_default_lc_type: C
 devture_postgres_default_encoding: UTF8
 
+# pgtune.leopard.in.ua implementation in ansible, based on https://github.com/le0pard/pgtune/blob/master/src/features/configuration/configurationSlice.js
+# The following block calculates optimal defaults, based on server's CPU and RAM, all calculations are in kb
+devture_postgres_memtotal_kb: "{{ ansible_memtotal_mb*1024|int }}"
+devture_postgres_data_storage: ssd # possible values: ssd, hdd
+devture_postgres_max_connections: 200
+devture_postgres_shared_buffers: "{{ devture_postgres_memtotal_kb|int/4 }}"
+devture_postgres_effective_cache_size: "{{ (devture_postgres_memtotal_kb|int*3)/4 }}"
+devture_postgres_maintenance_work_mem: "{{ '2097152' if (devture_postgres_memtotal_kb|int/16)/1024 >= 2048 else devture_postgres_memtotal_kb|int/16 }}"
+devture_postgres_checkpoint_completion_target: 0.9
+devture_postgres_wal_buffers: "{{ '16384' if ((devture_postgres_shared_buffers|int*3)/100)/1024 >= 16 else devture_postgres_shared_buffers|int }}" # 16mb
+devture_postgres_min_wal_size: 1048576 # 1gb
+devture_postgres_max_wal_size: 4194304 # 4gb
+devture_postgres_default_statistics_target: 100
+devture_postgres_random_page_cost: "{{ '1.1' if devture_postgres_data_storage == 'ssd' else '4' }}"
+devture_postgres_effective_io_concurrency: "{{ '200' if devture_postgres_data_storage == 'ssd' else '2' }}"
+devture_postgres_max_worker_processes: "{{ ansible_processor_nproc }}"
+devture_postgres_max_parallel_workers: "{{ ansible_processor_nproc }}"
+devture_postgres_max_parallel_workers_per_gather: "{{ '4' if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2 }}"
+devture_postgres_max_parallel_maintenance_workers: "{{ '4' if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2 }}"
+devture_postgres_work_mem_raw: "{{ ((devture_postgres_memtotal_kb|int - devture_postgres_shared_buffers|int)/(devture_postgres_max_connections|int*3))/devture_postgres_max_parallel_workers_per_gather|int }}"
+devture_postgres_work_mem: "{{ '64' if devture_postgres_work_mem_raw|int <= 64 else devture_postgres_work_mem_raw|int }}"
+devture_postgres_huge_pages: "{{ 'off' if devture_postgres_memtotal_kb|int/1024/1024 < 32 else 'try' }}"
+
 # devture_postgres_initdb_args controls POSTGRES_INITDB_ARGS
 devture_postgres_initdb_args: '--lc-collate {{ devture_postgres_default_lc_collate }} --lc-ctype {{ devture_postgres_default_lc_type }} --encoding {{ devture_postgres_default_encoding }}'
 
@@ -101,9 +124,32 @@ devture_postgres_container_image_force_pull: "{{ devture_postgres_container_imag
 # A list of extra arguments to pass to the container
 devture_postgres_container_extra_arguments: []
 
+# devture_postgres_postgres_process_extra_arguments_auto is for use by the playbook that wraps this role.
+# For your own custom definitions, see devture_postgres_postgres_process_extra_arguments_custom.
+devture_postgres_postgres_process_extra_arguments_auto: [
+  "-c 'max_connections={{ devture_postgres_max_connections|int }}'",
+  "-c 'shared_buffers={{ (devture_postgres_shared_buffers|int/1024)|int }}MB'",
+  "-c 'effective_cache_size={{ (devture_postgres_effective_cache_size|int/1024)|int }}MB'",
+  "-c 'maintenance_work_mem={{ (devture_postgres_maintenance_work_mem|int/1024)|int }}MB'",
+  "-c 'checkpoint_completion_target={{ devture_postgres_checkpoint_completion_target }}'",
+  "-c 'wal_buffers={{ (devture_postgres_wal_buffers|int/1024)|int }}MB'",
+  "-c 'default_statistics_target={{ devture_postgres_default_statistics_target|int }}'",
+  "-c 'random_page_cost={{ devture_postgres_random_page_cost }}'",
+  "-c 'effective_io_concurrency={{ devture_postgres_effective_io_concurrency|int }}'",
+  "-c 'work_mem={{ devture_postgres_work_mem|int }}kB'",
+  "-c 'huge_pages={{ devture_postgres_huge_pages }}'",
+  "-c 'min_wal_size={{ (devture_postgres_min_wal_size|int/1024)|int }}MB'",
+  "-c 'max_wal_size={{ (devture_postgres_max_wal_size|int/1024)|int }}MB'",
+  "-c 'max_worker_processes={{ devture_postgres_max_worker_processes|int }}'",
+  "-c 'max_parallel_workers={{ devture_postgres_max_parallel_workers|int }}'",
+  "-c 'max_parallel_workers_per_gather={{ devture_postgres_max_parallel_workers_per_gather|int }}'",
+  "-c 'max_parallel_maintenance_workers={{ devture_postgres_max_parallel_maintenance_workers|int }}'"
+]
+devture_postgres_postgres_process_extra_arguments_custom: []
+
 # A list of extra arguments to pass to the postgres process
 # e.g. "-c 'max_connections=200'"
-devture_postgres_process_extra_arguments: []
+devture_postgres_process_extra_arguments: "{{ devture_postgres_postgres_process_extra_arguments_auto + devture_postgres_postgres_process_extra_arguments_custom }}"
 
 # Controls whether the Postgres container exposes a port (tcp/5432 in the
 # container) that can be used to access the database from outside the container (e.g. with psql)
