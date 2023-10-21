@@ -34,20 +34,20 @@ devture_postgres_data_storage: ssd # possible values: ssd, hdd
 devture_postgres_max_connections: 200
 devture_postgres_shared_buffers: "{{ devture_postgres_memtotal_kb|int/4 }}"
 devture_postgres_effective_cache_size: "{{ (devture_postgres_memtotal_kb|int*3)/4 }}"
-devture_postgres_maintenance_work_mem: "{{ '2097152' if (devture_postgres_memtotal_kb|int/16)/1024 >= 2048 else devture_postgres_memtotal_kb|int/16 }}"
+devture_postgres_maintenance_work_mem: "{{ 2097152 if (devture_postgres_memtotal_kb|int/16)/1024 >= 2048 else devture_postgres_memtotal_kb|int/16 }}"
 devture_postgres_checkpoint_completion_target: 0.9
-devture_postgres_wal_buffers: "{{ '16384' if ((devture_postgres_shared_buffers|int*3)/100)/1024 >= 16 else devture_postgres_shared_buffers|int }}" # 16mb
+devture_postgres_wal_buffers: "{{ 16384 if ((devture_postgres_shared_buffers|int*3)/100)/1024 >= 16 else devture_postgres_shared_buffers|int }}" # 16mb
 devture_postgres_min_wal_size: 1048576 # 1gb
 devture_postgres_max_wal_size: 4194304 # 4gb
 devture_postgres_default_statistics_target: 100
-devture_postgres_random_page_cost: "{{ '1.1' if devture_postgres_data_storage == 'ssd' else '4' }}"
-devture_postgres_effective_io_concurrency: "{{ '200' if devture_postgres_data_storage == 'ssd' else '2' }}"
+devture_postgres_random_page_cost: "{{ 1.1 if devture_postgres_data_storage == 'ssd' else 4 }}"
+devture_postgres_effective_io_concurrency: "{{ 200 if devture_postgres_data_storage == 'ssd' else 2 }}"
 devture_postgres_max_worker_processes: "{{ ansible_processor_nproc }}"
 devture_postgres_max_parallel_workers: "{{ ansible_processor_nproc }}"
-devture_postgres_max_parallel_workers_per_gather: "{{ ('4' if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2) | round(0, 'ceil') | int }}"
-devture_postgres_max_parallel_maintenance_workers: "{{ ('4' if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2) | round(0, 'ceil') | int }}"
+devture_postgres_max_parallel_workers_per_gather: "{{ (4 if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2) | round(0, 'ceil') | int }}"
+devture_postgres_max_parallel_maintenance_workers: "{{ (4 if ansible_processor_nproc/2 > 4 else ansible_processor_nproc|int/2) | round(0, 'ceil') | int }}"
 devture_postgres_work_mem_raw: "{{ ((devture_postgres_memtotal_kb|int - devture_postgres_shared_buffers|int)/(devture_postgres_max_connections|int*3))/devture_postgres_max_parallel_workers_per_gather|int }}"
-devture_postgres_work_mem: "{{ '64' if devture_postgres_work_mem_raw|int <= 64 else devture_postgres_work_mem_raw|int }}"
+devture_postgres_work_mem: "{{ 64 if devture_postgres_work_mem_raw|int <= 64 else devture_postgres_work_mem_raw|int }}"
 devture_postgres_huge_pages: "{{ 'off' if devture_postgres_memtotal_kb|int/1024/1024 < 32 else 'try' }}"
 
 # devture_postgres_initdb_args controls POSTGRES_INITDB_ARGS
