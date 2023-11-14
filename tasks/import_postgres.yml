@@ -76,7 +76,7 @@
       --mount type=bind,src={{ server_path_postgres_dump }},dst=/{{ server_path_postgres_dump | basename }},ro
       --entrypoint=/bin/sh
       {{ devture_postgres_container_image_latest }}
-      -c "cat /{{ server_path_postgres_dump | basename }} |
+      -c "set -o pipefail && cat /{{ server_path_postgres_dump | basename }} |
       {{ 'gunzip |' if server_path_postgres_dump.endswith('.gz') else '' }}
       grep -vE '{{ devture_postgres_import_roles_ignore_regex }}' |
       grep -vE '{{ devture_postgres_import_databases_ignore_regex }}' |
