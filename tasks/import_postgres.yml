@@ -80,7 +80,7 @@
       {{ 'gunzip |' if server_path_postgres_dump.endswith('.gz') else '' }}
       grep -vE '{{ devture_postgres_import_roles_ignore_regex }}' |
       grep -vE '{{ devture_postgres_import_databases_ignore_regex }}' |
-      psql -v ON_ERROR_STOP=1 -h {{ devture_postgres_identifier }} --dbname={{ postgres_default_import_database }}"
+      psql -b -v ON_ERROR_STOP=1 -h {{ devture_postgres_identifier }} --dbname={{ postgres_default_import_database }}"
   tags:
     - skip_ansible_lint
 
