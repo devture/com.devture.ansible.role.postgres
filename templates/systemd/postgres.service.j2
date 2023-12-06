@@ -10,7 +10,7 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
-ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ devture_postgres_identifier }} 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_postgres_container_stop_grace_time_seconds }} {{ devture_postgres_identifier }} 2>/dev/null || true'
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ devture_postgres_identifier }} 2>/dev/null || true'
 
 # We need /dev/shm to be larger than the default to allow VACUUM to work.
@@ -40,7 +40,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			{{ devture_postgres_container_image_to_use }} \
 			postgres {{ devture_postgres_process_extra_arguments|join(' ') }}
 
-ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ devture_postgres_identifier }} 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_postgres_container_stop_grace_time_seconds }} {{ devture_postgres_identifier }} 2>/dev/null || true'
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ devture_postgres_identifier }} 2>/dev/null || true'
 Restart=always
 RestartSec=30

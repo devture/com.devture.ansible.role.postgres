@@ -121,6 +121,11 @@ devture_postgres_container_image_to_use: '{{ devture_postgres_container_image_la
 
 devture_postgres_container_image_force_pull: "{{ devture_postgres_container_image_to_use.endswith(':latest') }}"
 
+# Controls how long to wait for the container to stop gracefully before killing it.
+# Because `devture_systemd_docker_base_container_stop_grace_time_seconds` may be quite short and databases are more important to stop gracefully,
+# we default to at least 30 seconds.
+devture_postgres_container_stop_grace_time_seconds: "{{ [devture_systemd_docker_base_container_stop_grace_time_seconds, 30] | max }}"
+
 # A list of extra arguments to pass to the container
 devture_postgres_container_extra_arguments: []
 
