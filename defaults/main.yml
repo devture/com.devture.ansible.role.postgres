@@ -61,6 +61,24 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list: "{{ devture_post
 devture_postgres_systemd_services_to_stop_for_maintenance_list_auto: []
 devture_postgres_systemd_services_to_stop_for_maintenance_list_custom: []
 
+# Controls whether this role will stop the Postgres systemd service it had started after having prepared it.
+#
+# As part of the installation process, this role may bring up the Postgres service
+# and run some queries against it to prepare the additional databases, etc.
+# If the service was originally stopped before these preparations and we started it just to prepare it,
+# this setting would control whether we'd restore it to a stopped state.
+#
+# If Postgres was already running, it wouldn't be stopped after preparation regardless of the value of this variable.
+#
+# This setting only affects Postgres stopping as part of the preparation process.
+# Other parts of this role (importing, vacuuming, etc.) may also start an originally stopped Postgres to do their work.
+# These other parts will continue stopping such an originally-stopped Postgres regardless of this setting.
+#
+# We default this to false (don't stop), because it provides for a smoother installation experience with less stopping/starting.
+# Before this setting got introduced, we used to stop the service (if it's us that started it),
+# but this is now seen as wasteful work, which could delay the installation process.
+devture_postgres_systemd_service_stop_originally_stopped_after_preparation: false
+
 # devture_postgres_vacuum_presets contains various presets related to vacuuming (`--tags=run-postgres-vacuum`).
 # See: https://www.postgresql.org/docs/current/sql-vacuum.html
 #

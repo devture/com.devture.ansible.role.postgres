@@ -35,8 +35,8 @@
   # Suppress logging to avoid dumping the credentials to the shell
   no_log: true
 
-- name: Ensure Postgres is stopped (if it previously was)
-  when: devture_postgres_ensure_started_result.changed | bool
+- name: Ensure Postgres is stopped, if it originally was and if we are configured to do it
+  when: devture_postgres_systemd_service_stop_originally_stopped_after_preparation | bool and devture_postgres_ensure_started_result.changed | bool
   ansible.builtin.service:
     name: "{{ devture_postgres_identifier }}"
     state: stopped
