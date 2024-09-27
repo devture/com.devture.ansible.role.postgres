@@ -1,5 +1,7 @@
 # Postgres Ansible role
 
+⚠️ **WARNING**: this role is now maintained in [mother-of-all-self-hosting/ansible-role-postgres](https://github.com/mother-of-all-self-hosting/ansible-role-postgres).
+
 This is an [Ansible](https://www.ansible.com/) role which installs [Postgres](https://www.postgresql.org/) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
 This role *implicitly* depends on:
